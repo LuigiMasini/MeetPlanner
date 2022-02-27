@@ -1,25 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import { BrowserRouter as Router, Route, Redirect} from 'react-router-dom';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import {FirebaseAuthConsumer} from "@react-firebase/auth";
+
+import './App.css';
+import './fonts.css'
+
+import Landing from './screens/Landing'
+import Home from './screens/Home'
+
+function Routing({isSignedIn, ...props}) {
+	
+	const [isNew, setIsNew] = React.useState(false)
+	
+	if (isSignedIn)
+		return (
+			<Router>
+				<Route exact path='/'><Home isNew={isNew}/></Route>
+				<Redirect to='/' />
+			</Router>
+		)
+	
+	return (
+		<Router>
+			<Route exact path='/'><Landing setIsNew={setIsNew}/></Route>
+			<Redirect to='/' />
+		</Router>
+	)
 }
 
-export default App;
+const App = props => <FirebaseAuthConsumer><Routing {...props}/></FirebaseAuthConsumer>;
+
+export default App
